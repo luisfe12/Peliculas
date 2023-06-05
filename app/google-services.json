@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "61104341253",
+    "project_id": "fdpantalla-7fbaa",
+    "storage_bucket": "fdpantalla-7fbaa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:61104341253:android:e774ab4faa35a6059e776c",
+        "android_client_info": {
+          "package_name": "com.example.fondos_pantalla2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "61104341253-7hd0f664ggpmdd5nmkbdd5mi38ngkehb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.fondos_pantalla2",
+            "certificate_hash": "ef9a40089d3b14041ebae8a1af5743a705a89b64"
+          }
+        },
+        {
+          "client_id": "61104341253-iog9u7pat78lv3vp742b512pqefbech7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5ytQjOha1UI3ybgiqC5zSUkjJlPuE71Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "61104341253-iog9u7pat78lv3vp742b512pqefbech7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
