@@ -1,6 +1,7 @@
 package com.example.fondos_pantalla2.adminscreen.ui.categorias.peliculas
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -32,6 +33,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -43,12 +45,28 @@ import com.example.fondos_pantalla2.adminscreen.ui.categorias.peliculas.addpelis
 
 @ExperimentalMaterial3Api
 @Composable
-fun RegistrarPelicula(navController:NavHostController) {
+fun RegistrarPelicula(navController: NavHostController) {
 
     val addPeliculasViewModel: AddPeliculasViewModel = AddPeliculasViewModel();
     val nameM by addPeliculasViewModel.nameMovie.observeAsState("");
     val isloading by addPeliculasViewModel.isLoading.observeAsState(false);
     val isloadinImage by addPeliculasViewModel.isSearchinImage.observeAsState(false);
+    val clickBtnState by addPeliculasViewModel.clickBtnPublish.observeAsState(false);
+    val peliculaimgUpload by addPeliculasViewModel.peliculaImgUpload.observeAsState(false);
+
+
+    val contex = LocalContext.current;
+
+//    if (clickBtnState == true && isloadinImage == true) {
+//        Log.i("ENTRO AL ALERT",
+//            "${addPeliculasViewModel.clickBtnPublish.value} ${isloadinImage}")
+//        AlertDialogPublish(mesagge = "Publicando Pelicula", addPeliculasViewModel)
+//
+//    }
+
+    if (peliculaimgUpload == true) {
+        Toast.makeText(contex, "Se subio correctamen el valor", Toast.LENGTH_SHORT).show();
+    }
 
 
     Column(
@@ -65,7 +83,7 @@ fun RegistrarPelicula(navController:NavHostController) {
         Spacer(modifier = Modifier.height(20.dp));
         IconsImageM(addPeliculasViewModel = addPeliculasViewModel);
         Spacer(modifier = Modifier.height(20.dp));
-        ButtonPublicar(isload = isloading, nameM,addPeliculasViewModel);
+        ButtonPublicar(isload = isloading, nameM, addPeliculasViewModel);
 
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Log.i("VALUE BOX", "${isloadinImage}");
@@ -73,7 +91,10 @@ fun RegistrarPelicula(navController:NavHostController) {
                 CircularProgressIndicator()
                 Log.i("Cirular", "Que paso en la Image")
             } else {
-                Log.i("TRUEEE IMAGE", "${addPeliculasViewModel._selectImage.value}")
+                Log.i("TRUEEE IMAGE", "${addPeliculasViewModel._selectImage.value}");
+//                val inputStream = requireContext().contentResolver.openInputStream(addPeliculasViewModel._selectImage.value!!)
+//                BitmapFactory.decodeStream(inputStream)
+//                Log.i("TRUEEE IMAGE", "${BitmapFactory.decodeStream(inputStream)}")
                 Image(
                     painter = rememberAsyncImagePainter(addPeliculasViewModel._selectImage.value),
                     contentDescription = "Imagen"
@@ -149,11 +170,15 @@ fun IconsImageM(addPeliculasViewModel: AddPeliculasViewModel) {
 }
 
 @Composable
-fun ButtonPublicar(isload: Boolean, nameM:String,addPeliculasViewModel: AddPeliculasViewModel) {
+fun ButtonPublicar(isload: Boolean, nameM: String, addPeliculasViewModel: AddPeliculasViewModel) {
 
     Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
         Button(
-            onClick = { addPeliculasViewModel.uploadImage(nameM) },
+            onClick = {
+                addPeliculasViewModel.uploadImage(nameM)
+                addPeliculasViewModel.clickBtnState(true)
+                Log.i("Boton Publicar","${addPeliculasViewModel.clickBtnPublish.value}")
+            },
             enabled = isload,
             modifier = Modifier
                 .fillMaxWidth()

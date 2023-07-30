@@ -19,9 +19,13 @@ class AddPeliculasViewModel : ViewModel() {
     private val _isSearchinImage = MutableLiveData<Boolean>();
     private val _rutaAlmacenamiento = "Peliucla_Subida/";
     private val _rutaDataBase = "PELICULAS";
+    private var imageLink:String = "";
+    private val _clickBtnPublish = MutableLiveData<Boolean>();
+    private val _peliculaImgUpload = MutableLiveData<Boolean>();
 
     private val mStorageReference = Firebase.storage.reference;
     private val dataBaseReference = FirebaseDatabase.getInstance().getReference(_rutaDataBase);
+
 
     var _selectImage = MutableLiveData<Uri>();
 
@@ -30,12 +34,17 @@ class AddPeliculasViewModel : ViewModel() {
 
     val isSearchinImage: LiveData<Boolean> = _isSearchinImage;
 
+    val clickBtnPublish:LiveData<Boolean> = _clickBtnPublish;
+
+    val peliculaImgUpload:LiveData<Boolean> = _peliculaImgUpload;
+
+    private fun isAvaible(name: String): Boolean = name.isNotEmpty();
     fun setNameMoview(name: String) {
         _nameMovie.value = name;
         _isLoading.value = isAvaible(name);
     }
 
-    private fun isAvaible(name: String): Boolean = name.isNotEmpty();
+
 
 //    fun getUriIamge(uri:Uri){
 //        _selectImage.value = uri;
@@ -45,6 +54,9 @@ class AddPeliculasViewModel : ViewModel() {
 //        _isSearchinImage.value = value;
 //    }
 
+    fun clickBtnState(value:Boolean){
+        _clickBtnPublish.value = true;
+    }
     fun publishImage() {
 
         Log.i("ENTRO publishImage", "${_selectImage.value}")
@@ -53,8 +65,8 @@ class AddPeliculasViewModel : ViewModel() {
             try {
                 Log.i("TRY publishImage", "${_selectImage.value}")
                 val mStorageReference2 = mStorageReference.child(
-                    _rutaAlmacenamiento +
-                            System.currentTimeMillis() +
+                    _rutaAlmacenamiento+
+                            System.currentTimeMillis()+"."+
                             _selectImage.value
                 );
 
@@ -64,6 +76,7 @@ class AddPeliculasViewModel : ViewModel() {
                     Log.i("URI-MSTORAGE", "${uri}")
                     mStorageReference2.downloadUrl.addOnCompleteListener { downloadtask ->
                         if (downloadtask.isSuccessful) {
+                            imageLink = downloadtask.result.toString();//convierte el uri en url
                             Log.i("NOMBRE PELICULA", "${_nameMovie.value}");
                             Log.i("NOMBRE PELICULA ppp", "${_nameMovie.value}");
                             _isSearchinImage.value = true;
@@ -84,12 +97,15 @@ class AddPeliculasViewModel : ViewModel() {
     fun uploadImage(nameM:String){
         viewModelScope.launch {
             val pelicula = Pelicula(
-                image = _selectImage.value.toString(),
+                image = imageLink,
                 name = nameM,
                 views = 0,
             )
             val idImg = dataBaseReference.push().key;
-            dataBaseReference.child(idImg!!).setValue(pelicula)
+            dataBaseReference.child(idImg!!).setValue(pelicula).addOnSuccessListener {
+                _peliculaImgUpload.value = true
+            }
+
         }
     }
 

@@ -22,6 +22,7 @@ class AddVideojuegoViewModel:ViewModel() {
     private val _vgStorageRfs = Firebase.storage.reference;
     private val _dbVGRfs = FirebaseDatabase.getInstance().getReference(_rutaDbVg);
 
+    var imageLink = MutableLiveData<String>()
     var selecImgVg = MutableLiveData<Uri>()
 
     val nameVideoGame:LiveData<String> = _nameVideoGame;
@@ -44,6 +45,7 @@ class AddVideojuegoViewModel:ViewModel() {
             videogameSorage.putFile(selecImgVg.value!!).addOnSuccessListener { Uri->
                 videogameSorage.downloadUrl.addOnCompleteListener { downloadTask->
                     if (downloadTask.isSuccessful){
+                        imageLink.value = downloadTask.result.toString();
                         _isVGload.value = true;
                     }
                 }
@@ -55,7 +57,7 @@ class AddVideojuegoViewModel:ViewModel() {
     fun publishVideoGame(nameVG:String){
         viewModelScope.launch {
             val videojuego = VideoJuego(
-                image = selecImgVg.value.toString(),
+                image = imageLink.value!!,
                 name = nameVG,
                 views = 0,
             )

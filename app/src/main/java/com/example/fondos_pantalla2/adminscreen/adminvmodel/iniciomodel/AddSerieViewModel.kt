@@ -25,7 +25,7 @@ class AddSerieViewModel : ViewModel() {
 
     var selecImgSerie = MutableLiveData<Uri>();
 
-
+    var imageLink:String = "";
     val nameSerie: LiveData<String> = _nameSerie;
     val enableBtn: LiveData<Boolean> = _enableBtn;
     val serieLoad: LiveData<Boolean> = _serieLoad;
@@ -47,6 +47,7 @@ class AddSerieViewModel : ViewModel() {
                 serieStorageRfs.putFile(selecImgSerie.value!!).addOnSuccessListener { uri ->
                     serieStorageRfs.downloadUrl.addOnCompleteListener { downloadTask ->
                         if (downloadTask.isSuccessful) {
+                            imageLink = downloadTask.result.toString();
                             _serieLoad.value = true;
                         }
                     }

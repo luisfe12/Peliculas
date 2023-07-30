@@ -23,6 +23,7 @@ class PeliculasViewModel: ViewModel() {
     val peliculas: StateFlow<List<Pelicula>> = _peliculas;
     val pelisLoad:LiveData<Boolean> = _pelisLoad;
 
+
     init {
         listenForMovies()
     }
@@ -37,16 +38,18 @@ class PeliculasViewModel: ViewModel() {
                         val name = peliculasSnapshot.child("name").getValue(String::class.java);
                         val views = peliculasSnapshot.child("views").getValue(Int::class.java);
 
-                        val pelicula = Pelicula(image!!, name!!, views!!)
-                        Log.i("PELICULA DB", "${pelicula}");
-                        peliculaList.add(pelicula);
+                        if (image != null && views != null && name != null){
+                            val pelicula = Pelicula(image!!, name!!, views!!)
+                            Log.i("PELICULA DB", "${pelicula}");
+                            peliculaList.add(pelicula);
+                        }
                     }
 
                     _peliculas.value = peliculaList;
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-                    Log.i("LISTEN DATA Error", "$error")
+                    Log.i("LISTEN DATA Error", "${error.message}")
                 }
 
             }

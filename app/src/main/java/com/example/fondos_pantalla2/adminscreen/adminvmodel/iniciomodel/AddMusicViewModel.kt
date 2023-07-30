@@ -27,6 +27,7 @@ class AddMusicViewModel: ViewModel() {
     private val storageRfs = Firebase.storage.reference
     private val dataBaseRfs = FirebaseDatabase.getInstance().getReference(_rutaDataBase)
 
+    var imageLink: String = "";
     var _selectedIMsc = MutableLiveData<Uri>()
 
     fun setNameMusic(nameMsc:String){
@@ -51,6 +52,7 @@ class AddMusicViewModel: ViewModel() {
 
                     mStorageRfs.downloadUrl.addOnCompleteListener {downloadTask ->
                         if (downloadTask.isSuccessful){
+                            imageLink = downloadTask.result.toString();
                             _loadImgMsc.value = true;
                         }
                     }
